@@ -3,6 +3,7 @@
 import numpy as np
 import cv2
 import time
+import sys
 
 H, S, V = 0, 1, 2
 
@@ -11,10 +12,13 @@ def main():
   # detect_damage(img)
   cap = cv2.VideoCapture(1)
   while True:
-	  ret, img = cap.read()
-	  detect_damage(img)
-	  time.sleep(0.1)
+    ret, img = cap.read()
+    detect_damage(img)
+    time.sleep(0.1)
 
+def beep():
+	sys.stdout.write('\a')
+	sys.stdout.flush()
 
 # show image format (basically a 3-d array of pixel color info, in BGR format)
 def detect_damage(img):
@@ -64,6 +68,7 @@ def detect_damage(img):
   	print("-----------------")
   	print("> IS DAMAGE!!!! <")
   	print("-----------------")
+  	beep()
   else:
   	print("OK")
 
