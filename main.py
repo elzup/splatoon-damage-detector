@@ -2,12 +2,19 @@
 
 import numpy as np
 import cv2
+import time
 
 H, S, V = 0, 1, 2
 
 def main():
-	img = cv2.imread('./output/cam-bad.png', cv2.IMREAD_UNCHANGED)
-	detect_damage(img)
+  # img = cv2.imread('./output/cam-emp.png', cv2.IMREAD_UNCHANGED)
+  # detect_damage(img)
+  cap = cv2.VideoCapture(1)
+  while True:
+	  ret, img = cap.read()
+	  detect_damage(img)
+	  time.sleep(0.1)
+
 
 # show image format (basically a 3-d array of pixel color info, in BGR format)
 def detect_damage(img):
@@ -22,16 +29,16 @@ def detect_damage(img):
   pxm = img[pm['sy'], pm['sx']]
   pxe = img[pe['sy'], pe['sx']]
 
-  cv2.rectangle(img, (pm['sx'], pm['sy']), (pm['ex'], pm['ey']), (0, 0, 255), 4)
-  cv2.rectangle(img, (pe['sx'], pe['sy']), (pe['ex'], pe['ey']), (0, 0, 255), 4)
-  cv2.imwrite("output/cam-bad-ck.png", img)
+  # cv2.rectangle(img, (pm['sx'], pm['sy']), (pm['ex'], pm['ey']), (0, 0, 255), 4)
+  # cv2.rectangle(img, (pe['sx'], pe['sy']), (pe['ex'], pe['ey']), (0, 0, 255), 4)
+  # cv2.imwrite("output/cam-bad-ck.png", img)
 
   # damage logic
   v_th = 30
   pm_vhigh = pmx[H] > v_th
   pe_vhigh = pex[H] > v_th
 
-  s_th = 140
+  s_th = 70
   pm_shigh = pmx[S] > s_th
   pe_shigh = pex[S] > s_th
 
@@ -61,4 +68,4 @@ def detect_damage(img):
   	print("OK")
 
 if __name__ == '__main__':
-	main()
+  main()
