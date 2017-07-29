@@ -5,6 +5,9 @@ import cv2
 import time
 import sys
 
+width = 1280
+height = 720
+
 H, S, V = 0, 1, 2
 
 def main():
@@ -24,30 +27,30 @@ def beep():
 def detect_damage(img):
   img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
-  pm = { 'sx': 80, 'sy': 430, 'ex': 150, 'ey': 500 }
-  pe = { 'sx': 220, 'sy': 550, 'ex': 280, 'ey': 700 }
+  pm = { 'sx': 300, 'sy': 450, 'ex': 1100, 'ey': 650 }
+  pe = { 'sx': 0, 'sy': height - 65, 'ex': width - 1, 'ey': height - 1 }
 
-  pmx = np.average(img[pm['sy']:pm['ey'], pm['sx']:pm['ex']], axis=(0, 1))
+  pmx = np.median(img[pm['sy']:pm['ey'], pm['sx']:pm['ex']], axis=(0, 1))
   pex = np.average(img[pe['sy']:pe['ey'], pe['sx']:pe['ex']], axis=(0, 1))
 
   pxm = img[pm['sy'], pm['sx']]
   pxe = img[pe['sy'], pe['sx']]
 
-  # cv2.rectangle(img, (pm['sx'], pm['sy']), (pm['ex'], pm['ey']), (0, 0, 255), 4)
-  # cv2.rectangle(img, (pe['sx'], pe['sy']), (pe['ex'], pe['ey']), (0, 0, 255), 4)
+  cv2.rectangle(img, (pm['sx'], pm['sy']), (pm['ex'], pm['ey']), (0, 0, 255), 4)
+  cv2.rectangle(img, (pe['sx'], pe['sy']), (pe['ex'], pe['ey']), (0, 0, 255), 4)
   # cv2.imwrite("output/cam-bad-ck.png", img)
 
   # damage logic
-  v_th = 30
+  v_th = 100
   pm_vhigh = pmx[H] > v_th
   pe_vhigh = pex[H] > v_th
 
-  s_th = 70
+  s_th = 50
   pm_shigh = pmx[S] > s_th
   pe_shigh = pex[S] > s_th
 
-  hd_th = 60
-  hdhigh = abs(pmx[H] - pex[H]) > 60
+  hd_th = 20
+  hdhigh = abs(pmx[H] - pex[H]) < hd_th
 
   print("HSV")
   print(" me   : " + str(pmx))
@@ -64,7 +67,8 @@ def detect_damage(img):
   print("H diff > " + str(hd_th))
   print(" v    : " + str(hdhigh))
 
-  if all([pm_vhigh, pe_vhigh, pm_shigh, pe_shigh, hdhigh]):
+  # if all([pm_vhigh, pe_vhigh, pm_shigh, pe_shigh, hdhigh]):
+  if all([hdhigh, pe_vhigh]):
   	print("-----------------")
   	print("> IS DAMAGE!!!! <")
   	print("-----------------")
