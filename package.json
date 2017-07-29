@@ -1,0 +1,12 @@
+{
+  "name": "splatoon-damage-detector",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "elzup <guild0105@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "binary-parser": "^1.1.5",
+    "node-webcam": "^0.4.3",
+    "opencv": "^6.0.0"
+  }
+}
