@@ -3,6 +3,7 @@
 import numpy as np
 import cv2
 import time
+import subprocess
 import sys
 
 width = 1280
@@ -20,8 +21,9 @@ def main():
     time.sleep(0.1)
 
 def beep():
-	sys.stdout.write('\a')
-	sys.stdout.flush()
+	# sys.stdout.write('\a')
+	# sys.stdout.flush()
+	res = subprocess.call('say itai', shell=True)
 
 # show image format (basically a 3-d array of pixel color info, in BGR format)
 def detect_damage(img):
